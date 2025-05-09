@@ -20,24 +20,29 @@ const cartRoutes = require('./routes/cart');
 const productApi = require('./routes/api/productapi');
 const { secureHeapUsed } = require('crypto');
 
-mongoose.connect(process.env.DB_URI, { 
-  useNewUrlParser: true, 
-  useUnifiedTopology: true,
+// Use DB_URI from .env, fallback to local if not set
+const dbUri = process.env.DB_URI;
+mongoose.connect(dbUri, { 
+    useNewUrlParser: true, 
+    useUnifiedTopology: true,
 })
-.then(() => console.log('Connected to MongoDB'))
-.catch(err => console.error('MongoDB connection error:', err))
-
+.then(() => {
+    console.log("Connected to MongoDB");
+})
+.catch((err) => {
+    console.log("Error connecting to MongoDB", err);
+});
 
 // seeding database
 // seedDB();
 
 let configSession = {
-    secret: process.env.JWT_SECRET,
+    secret: process.env.JWT_SECRET || 'keyboard cat',
     resave: false,
     saveUninitialized: false,
     cookie: {
-        httpOnly:true,
-        expires:Date.now() + 1000*60*60*24*7,
+        httpOnly: true,
+        expires: Date.now() + 1000*60*60*24*7,
         maxAge: 1000*60*60*24*7
     }
 };
@@ -67,9 +72,9 @@ app.use((req, res, next) => {
     next();
 });
 
-app.get('/' , (req,res)=>{
+app.get('/', (req, res) => {
     res.render('home');
-})
+});
 
 app.use(productRoutes);
 app.use(reviewRoutes);
@@ -78,9 +83,7 @@ app.use(cartRoutes);
 app.use(productApi);
 app.use(paymentRoutes);
 
-
-
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
-    console.log("Server is running on port 8080");
+    console.log(`Server is running on port ${PORT}`);
 });
