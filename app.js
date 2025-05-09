@@ -1,9 +1,4 @@
-if(process.env.NODE_ENV !== 'production') {
-    require('dotenv').config();
-}
-
-
-
+require('dotenv').config();
 
 const express = require('express');
 const app = express();
@@ -18,16 +13,11 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require('./models/User');
 const paymentRoutes = require('./routes/payment');
-
-
-
-
 const productRoutes = require('./routes/product');
 const reviewRoutes = require('./routes/review');
 const authRoutes = require('./routes/auth');
 const cartRoutes = require('./routes/cart');
 const productApi = require('./routes/api/productapi');
-
 const { secureHeapUsed } = require('crypto');
 
 mongoose.connect('mongodb://127.0.0.1:27017/shopping-app')
@@ -87,11 +77,6 @@ app.use(authRoutes);
 app.use(cartRoutes);
 app.use(productApi);
 app.use(paymentRoutes);
-
-
-
-
-
 
 const PORT = 8080;
 app.listen(PORT, () => {
