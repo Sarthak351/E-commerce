@@ -3,8 +3,9 @@ const router = express.Router();
 const { isLoggedIn } = require('../middleware');
 const { v4: uuidv4 } = require('uuid');
 require('dotenv').config();
+const Stripe = require('stripe');
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
 
 router.post('/create-checkout-session', isLoggedIn, async (req, res) => {
     const { amount, productName } = req.body;
