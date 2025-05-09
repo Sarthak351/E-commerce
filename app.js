@@ -20,19 +20,19 @@ const cartRoutes = require('./routes/cart');
 const productApi = require('./routes/api/productapi');
 const { secureHeapUsed } = require('crypto');
 
-mongoose.connect('mongodb://127.0.0.1:27017/shopping-app')
-.then(() => {
-    console.log("Connected to MongoDB");
+mongoose.connect(process.env.DB_URI, { 
+  useNewUrlParser: true, 
+  useUnifiedTopology: true,
 })
-.catch((err) => {
-    console.log("Error connecting to MongoDB", err);
-});
+.then(() => console.log('Connected to MongoDB'))
+.catch(err => console.error('MongoDB connection error:', err))
+
 
 // seeding database
 // seedDB();
 
 let configSession = {
-    secret: 'keyboard cat',
+    secret: process.env.JWT_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -78,7 +78,9 @@ app.use(cartRoutes);
 app.use(productApi);
 app.use(paymentRoutes);
 
-const PORT = 8080;
+
+
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log("Server is running on port 8080");
 });
